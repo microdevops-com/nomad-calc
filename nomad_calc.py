@@ -66,33 +66,71 @@ def main(yaml_file, on_date, debug):
         # For each territory
         for territory_name, territory_params in data["territories"].items():
 
-            days_sum = 0
-            territory_check_start_date = on_date - datetime.timedelta(days=territory_params[nomad_params["nationality"]]["per_period"]-1)
+            # Floating window case (maximum_stay and per_period are both defined)
+            if "per_period" in territory_params[nomad_params["nationality"]]:
 
-            # Take period backwards from on_date to per_period for this nomad nationality on this territory
-            for day in daterange(territory_check_start_date, on_date):
+                days_sum = 0
+                territory_check_start_date = on_date - datetime.timedelta(days=territory_params[nomad_params["nationality"]]["per_period"]-1)
 
-                # If nomad was on this territory on this day
-                if day in day_data and territory_name in day_data[day][nomad_name]:
+                # Take period backwards from on_date to per_period for this nomad nationality on this territory
+                for day in daterange(territory_check_start_date, on_date):
 
-                    days_sum += 1
+                    # If nomad was on this territory on this day
+                    if day in day_data and territory_name in day_data[day][nomad_name]:
 
-                    # Check if days_sum exceed maximum_stay
-                    if days_sum > territory_params[nomad_params["nationality"]]["maximum_stay"]:
-                        print("    {day}: already stayed {days} days from maximum stay of {maximum_stay} days".format(
-                                day=day,
-                                days=days_sum,
-                                maximum_stay=territory_params[nomad_params["nationality"]]["maximum_stay"]
+                        days_sum += 1
+
+                        # Check if days_sum exceed maximum_stay
+                        if days_sum > territory_params[nomad_params["nationality"]]["maximum_stay"]:
+                            print("    {day}: already stayed {days} days from maximum stay of {maximum_stay} days".format(
+                                    day=day,
+                                    days=days_sum,
+                                    maximum_stay=territory_params[nomad_params["nationality"]]["maximum_stay"]
+                                )
                             )
-                        )
 
-
-            print("  {territory_name} from {territory_check_start_date}: {days_sum}".format(
-                    territory_name=territory_name,
-                    territory_check_start_date=territory_check_start_date,
-                    days_sum=days_sum
+                print("  {territory_name} from {territory_check_start_date}: {days_sum}".format(
+                        territory_name=territory_name,
+                        territory_check_start_date=territory_check_start_date,
+                        days_sum=days_sum
+                    )
                 )
-            )
+
+            # Fixed maximum_stay case (per_period is not defined) - just check each 
+            else:
+
+                # Walk through each stay and check stay length
+                for stay in data["stays"]:
+
+                    if stay["territory"] == territory_name and nomad_name in stay["nomads"]:
+
+                        # Calculate stay length in days
+                        stay_length = stay["exit_date"] - stay["entry_date"] + datetime.timedelta(days=1)
+                        # Convert to integer
+                        stay_length = int(stay_length.days)
+
+                        # If stay length exceeds maximum_stay
+                        if stay_length > territory_params[nomad_params["nationality"]]["maximum_stay"]:
+
+                            print("  {territory_name} from {entry_date} to {exit_date} stay NOT OK: {stay_length}/{maximum_stay} days".format(
+                                    territory_name=territory_name,
+                                    entry_date=stay["entry_date"],
+                                    exit_date=stay["exit_date"],
+                                    stay_length=stay_length,
+                                    maximum_stay=territory_params[nomad_params["nationality"]]["maximum_stay"]
+                                )
+                            )
+
+                        else:
+
+                            print("  {territory_name} from {entry_date} to {exit_date} stay OK: {stay_length}/{maximum_stay} days".format(
+                                    territory_name=territory_name,
+                                    entry_date=stay["entry_date"],
+                                    exit_date=stay["exit_date"],
+                                    stay_length=stay_length,
+                                    maximum_stay=territory_params[nomad_params["nationality"]]["maximum_stay"]
+                                )
+                            )
 
 if __name__ == "__main__":
     main()

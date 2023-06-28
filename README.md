@@ -13,6 +13,9 @@ territories:
     Ukraine:
       maximum_stay: 90
       per_period: 180
+  Georgia:
+    Ukraine:
+      maximum_stay: 365 # without per_period we just check stays are not longer than maximum_stay
 
 nomads:
   Eugene:
@@ -21,6 +24,16 @@ nomads:
     nationality: Ukraine
 
 stays:
+- entry_date: 2020-01-01
+  exit_date: 2021-01-02
+  territory: Georgia
+  nomads:
+    - Eugene
+- entry_date: 2021-01-01
+  exit_date: 2021-12-31
+  territory: Georgia
+  nomads:
+    - Eugene
 - entry_date: 2023-01-01
   exit_date: 2023-01-20
   territory: Schengen
@@ -46,6 +59,8 @@ On Date: 2023-04-05 (all dates are inclusive)
 Eugene:
   Schengen from 2022-10-08: 20
   Türkiye from 2022-10-08: 11
+  Georgia from 2020-01-01 to 2021-01-02 stay NOT OK: 368/365 days
+  Georgia from 2021-01-01 to 2021-12-31 stay OK: 365/365 days
 Olha:
     2023-04-01: already stayed 91 days from maximum stay of 90 days
     2023-04-02: already stayed 92 days from maximum stay of 90 days
