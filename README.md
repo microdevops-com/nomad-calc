@@ -25,12 +25,12 @@ nomads:
 
 stays:
 - entry_date: 2020-01-01
-  exit_date: 2021-01-02
+  exit_date: 2020-12-30 # 2020 is a leap year - 366 days
   territory: Georgia
   nomads:
     - Eugene
 - entry_date: 2021-01-01
-  exit_date: 2021-12-31
+  exit_date: 2022-01-02
   territory: Georgia
   nomads:
     - Eugene
@@ -59,8 +59,8 @@ On Date: 2023-04-05 (all dates are inclusive)
 Eugene:
   Schengen from 2022-10-08: 20
   Türkiye from 2022-10-08: 11
-  Georgia from 2020-01-01 to 2021-01-02 stay NOT OK: 368/365 days
-  Georgia from 2021-01-01 to 2021-12-31 stay OK: 365/365 days
+  Georgia from 2020-01-01 to 2020-12-30 stay OK: 365/365 days
+  Georgia from 2021-01-01 to 2022-01-02 stay NOT OK: 367/365 days
 Olha:
     2023-04-01: already stayed 91 days from maximum stay of 90 days
     2023-04-02: already stayed 92 days from maximum stay of 90 days
@@ -69,4 +69,7 @@ Olha:
     2023-04-05: already stayed 95 days from maximum stay of 90 days
   Schengen from 2022-10-08: 95
   Türkiye from 2022-10-08: 0
+
 ```
+
+The `--check-exit-dates` flag makes calculations for all exit dates.

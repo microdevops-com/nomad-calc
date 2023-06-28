@@ -19,12 +19,12 @@ nomads:
 
 stays:
 - entry_date: 2020-01-01
-  exit_date: 2021-01-02
+  exit_date: 2020-12-30 # 2020 is a leap year - 366 days
   territory: Georgia
   nomads:
     - Eugene
 - entry_date: 2021-01-01
-  exit_date: 2021-12-31
+  exit_date: 2022-01-02
   territory: Georgia
   nomads:
     - Eugene
